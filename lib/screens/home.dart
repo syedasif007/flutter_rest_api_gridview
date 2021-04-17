@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rest_api_gridview/model/product.dart';
+import 'package:flutter_rest_api_gridview/widgets/add_cart_btn.dart';
+import 'package:flutter_rest_api_gridview/widgets/price_label.dart';
+import 'package:flutter_rest_api_gridview/widgets/title_area.dart';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
@@ -59,30 +62,14 @@ class _HomeState extends State<Home> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Image.network(list[index].image),
+                      PriceLabel(
+                        price: list[index].price,
+                        image: list[index].image,
+                      ),
                       SizedBox(height: 5.0),
-                      Container(
-                        height: 50,
-                        padding: const EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(child: Text(list[index].name)),
-                            SizedBox(width: 5.0),
-                            Icon(Icons.favorite_border, color: Colors.pink),
-                          ],
-                        ),
-                      ),
+                      TitleArea(name: list[index].name),
                       SizedBox(height: 20.0),
-                      ConstrainedBox(
-                        constraints:
-                            BoxConstraints.tightFor(width: 165, height: 35),
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(Icons.shopping_cart),
-                          label: Text('Add'),
-                        ),
-                      ),
+                      AddCartButton(),
                       // SizedBox(height: 10.0),
                     ],
                   ),
