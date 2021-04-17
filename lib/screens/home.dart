@@ -10,10 +10,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var isLoading;
   List<Product> list = [];
 
   @override
   void initState() {
+    setState(() {
+      isLoading = true;
+    });
     loadData();
     super.initState();
   }
@@ -27,6 +31,9 @@ class _HomeState extends State<Home> {
           .map((data) => new Product.fromJson(data))
           .toList();
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -35,50 +42,53 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('REST API & GridView'),
       ),
-      body: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: 0.6,
-          crossAxisCount: 2,
-          mainAxisSpacing: 1.0,
-          crossAxisSpacing: 1.0,
-        ),
-        itemCount: list.length,
-        itemBuilder: (BuildContext context, int index) => Card(
-          margin: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.network(list[index].image),
-                SizedBox(height: 5.0),
-                Container(
-                  height: 50,
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.6,
+                crossAxisCount: 2,
+                mainAxisSpacing: 1.0,
+                crossAxisSpacing: 1.0,
+              ),
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int index) => Card(
+                margin: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(child: Text(list[index].name)),
-                      SizedBox(width: 5.0),
-                      Icon(Icons.favorite_border, color: Colors.pink),
+                      Image.network(list[index].image),
+                      SizedBox(height: 5.0),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Text(list[index].name)),
+                            SizedBox(width: 5.0),
+                            Icon(Icons.favorite_border, color: Colors.pink),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      ConstrainedBox(
+                        constraints:
+                            BoxConstraints.tightFor(width: 165, height: 35),
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(Icons.shopping_cart),
+                          label: Text('Add'),
+                        ),
+                      ),
+                      // SizedBox(height: 10.0),
                     ],
                   ),
                 ),
-                SizedBox(height: 20.0),
-                ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(width: 165, height: 35),
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.shopping_cart),
-                    label: Text('Add'),
-                  ),
-                ),
-                // SizedBox(height: 10.0),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
